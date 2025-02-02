@@ -1,0 +1,38 @@
+[project]
+name = "quart-dishka"
+version = "0.1.0"
+description = "Quart integration for dishka"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Typing :: Typed",
+]
+dependencies = [
+    "dishka>=1.4.0",
+    "quart>=0.20.0",
+    "typing_extensions; python_version < '3.11'",
+]
+
+[project.optional-dependencies]
+lint = [
+    "ruff",
+    "mypy",
+]
+
+[project.urls]
+"Source" = "https://github.com/hrimov/quart-dishka"
+"Homepage" = "https://github.com/hrimov/quart-dishka"
+"Documentation" = "https://github.com/hrimov/quart-dishka"
+"Bug Tracker" = "https://github.com/hrimov/quart-dishka/issues"
+
+[build-system]
+requires = ["setuptools>=66.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]

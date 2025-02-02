@@ -1,0 +1,18 @@
+# project generated files
+__pycache__/
+/docs-build/
+/dist/
+/build/
+/.ruff_cache/
+/.nox/
+.coverage
+*.egg-info
+
+# common utilities
+/venv
+/.venv
+.mypy_cache/
+.idea/
+.vscode/
+.venv/
+.python-version
