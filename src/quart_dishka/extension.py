@@ -5,13 +5,12 @@ __all__ = [
 
 from collections.abc import Callable
 from functools import wraps
-from typing import Any, TypeAlias, TypeVar, cast
+from typing import Any, TypeAlias, TypeVar
 
 from dishka import AsyncContainer
 from dishka.integrations.base import is_dishka_injected, wrap_injection
 from quart import Quart, g
 from quart.blueprints import Blueprint
-from quart.typing import RouteCallable, WebsocketCallable
 
 from quart_dishka.container import ContainerMiddleware
 from quart_dishka.exceptions import ContainerNotSetError
@@ -30,13 +29,7 @@ def _inject_routes(app: Scaffold) -> None:
     for endpoint, func in app.view_functions.items():
         if not is_dishka_injected(func):
             wrapped = _make_wrapper(func)
-            if getattr(func, "websocket", False):
-                # Note: expression includes quart.wrappers.response.Response,
-                #       but target expects werkzeug.sansio.response.Response
-                app.view_functions[endpoint] = cast(WebsocketCallable, wrapped)  # type: ignore[assignment]
-            else:
-                app.view_functions[endpoint] = cast(RouteCallable, wrapped)
-
+            app.view_functions[endpoint] = wrapped
 
 def _make_wrapper(func: Any) -> Any:
     @wraps(func)
@@ -62,6 +55,8 @@ class QuartDishka:
     """Quart extension for Dishka dependency injection.
 
     Example:
+        >>> from dishka.async_container import make_async_container
+        >>> from quart_dishka.provider import QuartProvider
         >>> app = Quart(__name__)
         >>> container = make_async_container(QuartProvider())
         >>> QuartDishka(app=app, container=container)
