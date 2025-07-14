@@ -1,9 +1,10 @@
-import pytest
+from collections.abc import Callable, Generator, Iterable
 from contextlib import contextmanager
-from typing import Any, Callable, Generator, Iterable
+from typing import Any
 
-from quart import Quart, g
+import pytest
 from dishka import make_async_container
+from quart import Quart, g
 
 from quart_dishka.extension import QuartDishka, inject
 from .mocks import AppProvider

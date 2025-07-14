@@ -38,7 +38,7 @@ def _make_wrapper(func: Any) -> Any:
     async def wrapped(*args: Any, **kwargs: Any) -> Any:
         injected = inject(func)
         result = injected(*args, **kwargs)
-        
+
         if inspect.isawaitable(result):
             result = await result
 
