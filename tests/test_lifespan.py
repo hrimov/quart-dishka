@@ -25,7 +25,7 @@ def dishka_app_with_lifecycle_hooks(
 
     @app.route("/")
     @inject
-    async def handle_with_request():
+    async def route_handler_view():
         return await view()
 
     container = make_async_container(provider)
@@ -34,7 +34,7 @@ def dishka_app_with_lifecycle_hooks(
     yield app
 
 
-async def handle_with_request() -> str:
+async def static_ok_view() -> str:
     return "OK"
 
 
@@ -47,7 +47,7 @@ async def test_before_request_adds_container_to_quart_g(
     app_provider: AppProvider,
 ) -> None:
     with dishka_app_with_lifecycle_hooks(
-        handle_with_request,
+        static_ok_view,
         app_provider,
     ) as app:
         async with app.test_request_context("/"):
@@ -62,7 +62,7 @@ async def test_teardown_skips_container_close_when_not_in_quart_g(
     app_provider: AppProvider,
 ) -> None:
     with dishka_app_with_lifecycle_hooks(
-        handle_with_request,
+        static_ok_view,
         app_provider,
         before_request=(before_request_interceptor,),
     ) as app:
