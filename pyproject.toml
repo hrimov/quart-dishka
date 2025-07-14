@@ -23,6 +23,9 @@ lint = [
     "ruff",
     "mypy",
 ]
+test = [
+    "nox",
+]
 
 [project.urls]
 "Source" = "https://github.com/hrimov/quart-dishka"

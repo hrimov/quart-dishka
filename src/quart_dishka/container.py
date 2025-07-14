@@ -26,5 +26,5 @@ class ContainerMiddleware:
 
     # noinspection PyMethodMayBeStatic
     async def exit_scope(self, *_args: Any, **_kwargs: Any) -> None:
-        if hasattr(g, "dishka_container"):
-            await g.dishka_container.close()
+        if container := getattr(g, "dishka_container", None):
+            await container.close()
