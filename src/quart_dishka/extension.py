@@ -2,9 +2,9 @@ __all__ = [
     "QuartDishka",
     "inject",
 ]
-
+import functools
+import inspect
 from collections.abc import Callable
-from functools import wraps
 from typing import Any, TypeAlias, TypeVar
 
 from dishka import AsyncContainer
@@ -22,6 +22,8 @@ except ImportError:
 
 P = ParamSpec("P")
 T = TypeVar("T")
+# Note: in Flaks there was a general parent class for app & blueprint,
+#       but in Quart there is no such thing, so for typecheker we make an alias
 Scaffold: TypeAlias = Blueprint | Quart
 
 
@@ -32,12 +34,14 @@ def _inject_routes(app: Scaffold) -> None:
             app.view_functions[endpoint] = wrapped
 
 def _make_wrapper(func: Any) -> Any:
-    @wraps(func)
+    @functools.wraps(func)
     async def wrapped(*args: Any, **kwargs: Any) -> Any:
         injected = inject(func)
         result = injected(*args, **kwargs)
-        if hasattr(result, "__await__"):
+        
+        if inspect.isawaitable(result):
             result = await result
+
         return result
 
     return wrapped
@@ -93,6 +97,7 @@ class QuartDishka:
             for blueprint in app.blueprints.values():
                 # Note: incoming type is flask.sansio.blueprints.Blueprint,
                 #       but at runtime it's quart.blueprints.Blueprint
+                #       https://github.com/pallets/quart/issues/404
                 _inject_routes(blueprint)  # type: ignore[arg-type]
 
         app.extensions["QUART_DISHKA"] = self
