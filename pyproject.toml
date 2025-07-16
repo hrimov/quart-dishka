@@ -4,7 +4,7 @@ version = "1.0.0"
 description = "Quart integration for dishka"
 requires-python = ">=3.10"
 readme = "README.md"
-license = { text = "Apache-2.0" }
+license = "Apache-2.0"
 authors = [{ name = "Andrew Hrimov", email = "andrew.hrimov@gmail.com" }]
 classifiers = [
     "Programming Language :: Python :: 3.10",
