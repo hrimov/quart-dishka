@@ -8,6 +8,7 @@ from quart import Quart, Websocket
 
 from quart_dishka.container import ContainerMiddleware
 from quart_dishka.extension import _inject_routes, inject
+from quart_dishka.provider import QuartProvider
 from .mocks import (
     APP_DEP_VALUE,
     REQUEST_DEP_VALUE,
@@ -24,7 +25,7 @@ from .mocks import (
 async def dishka_http_app(handler, provider) -> AsyncGenerator[Quart, None]:
     app = Quart(__name__)
     app.get("/")(inject(handler))
-    container = make_async_container(provider)
+    container = make_async_container(provider, QuartProvider())
 
     middleware = ContainerMiddleware(container)
     middleware.setup(app)
@@ -39,7 +40,7 @@ async def dishka_http_app(handler, provider) -> AsyncGenerator[Quart, None]:
 async def dishka_ws_app(handler, provider) -> AsyncGenerator[Quart, None]:
     app = Quart(__name__)
     app.websocket("/")(inject(handler))
-    container = make_async_container(provider)
+    container = make_async_container(provider, QuartProvider())
 
     middleware = ContainerMiddleware(container)
     middleware.setup(app)
@@ -53,7 +54,7 @@ async def dishka_ws_app(handler, provider) -> AsyncGenerator[Quart, None]:
 @asynccontextmanager
 async def dishka_auto_app(view, provider):
     app = Quart(__name__)
-    container = make_async_container(provider)
+    container = make_async_container(provider, QuartProvider())
 
     middleware = ContainerMiddleware(container)
     middleware.setup(app)
@@ -68,15 +69,19 @@ async def dishka_auto_app(view, provider):
 
 
 async def handle_with_app(
-        a: FromDishka[AppDep],
-        mock: FromDishka[Mock],
+    a: FromDishka[AppDep],
+    mock: FromDishka[Mock],
 ) -> None:
     mock(a)
 
 
-@pytest.mark.parametrize("app_factory", [
-    dishka_http_app, dishka_auto_app,
-])
+@pytest.mark.parametrize(
+    "app_factory",
+    [
+        dishka_http_app,
+        dishka_auto_app,
+    ],
+)
 @pytest.mark.asyncio
 async def test_http_app_dependency(app_provider: AppProvider, app_factory):
     async with app_factory(handle_with_app, app_provider) as app:
@@ -88,8 +93,8 @@ async def test_http_app_dependency(app_provider: AppProvider, app_factory):
 
 
 async def handle_with_request(
-        a: FromDishka[RequestDep],
-        mock: FromDishka[Mock],
+    a: FromDishka[RequestDep],
+    mock: FromDishka[Mock],
 ) -> None:
     mock(a)
 
