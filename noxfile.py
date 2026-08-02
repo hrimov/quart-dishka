@@ -18,6 +18,7 @@ TEST_CMD = [
 PYTHON_VERSIONS = ["3.10", "3.11", "3.12", "3.13", "3.14", "3.15"]
 PYTHON_LEAST_STABLE_VERSION = "3.13"
 PYTHON_MIN_VERSION = PYTHON_VERSIONS[0]
+PYTHON_MAX_VERSION = PYTHON_VERSIONS[-1]
 QUART_MIN_VERSION = "0.20.0"
 DISHKA_VERSIONS = [
     "1.4.*",
@@ -62,6 +63,16 @@ def run(
     tags=["ci", "python"],
 )
 def python_matrix(session: nox.Session) -> None:
+    run(session, quart="latest", dishka="latest")
+
+
+@nox.session(
+    python=PYTHON_MAX_VERSION,
+    venv_backend="uv",
+    reuse_venv=True,
+    tags=["latest"],
+)
+def latest_compatibility(session: nox.Session) -> None:
     run(session, quart="latest", dishka="latest")
 
 
