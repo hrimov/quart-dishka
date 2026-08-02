@@ -23,8 +23,10 @@ async def test_quart_dishka_init_without_container():
     app = Quart(__name__)
     extension = QuartDishka(app=None)
 
-    with pytest.raises(ContainerNotSetError,
-                       match="Container must be set before initializing app"):
+    with pytest.raises(
+        ContainerNotSetError,
+        match="Container must be set before initializing app",
+    ):
         extension.init_app(app)
 
 

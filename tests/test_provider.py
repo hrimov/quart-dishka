@@ -66,11 +66,13 @@ async def handle_websocket(websocket: FromDishka[Websocket]) -> None:
 
     data = await websocket.receive_json()
 
-    await websocket.send_json({
-        "headers": headers,
-        "path": path,
-        "echo": data,
-    })
+    await websocket.send_json(
+        {
+            "headers": headers,
+            "path": path,
+            "echo": data,
+        },
+    )
 
 
 @pytest.mark.asyncio

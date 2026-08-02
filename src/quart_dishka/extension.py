@@ -33,6 +33,7 @@ def _inject_routes(app: Scaffold) -> None:
             wrapped = _make_wrapper(func)
             app.view_functions[endpoint] = wrapped
 
+
 def _make_wrapper(func: Any) -> Any:
     @functools.wraps(func)
     async def wrapped(*args: Any, **kwargs: Any) -> Any:
@@ -72,11 +73,11 @@ class QuartDishka:
     """
 
     def __init__(
-            self,
-            app: Quart | None = None,
-            container: AsyncContainer | None = None,
-            *,
-            auto_inject: bool = False,
+        self,
+        app: Quart | None = None,
+        container: AsyncContainer | None = None,
+        *,
+        auto_inject: bool = False,
     ) -> None:
         self.container = container
         self.auto_inject = auto_inject
@@ -85,7 +86,6 @@ class QuartDishka:
             self.init_app(app)
 
     def init_app(self, app: Quart) -> None:
-
         if not self.container:
             raise ContainerNotSetError
 

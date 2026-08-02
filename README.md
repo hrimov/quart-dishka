@@ -12,13 +12,13 @@ framework with [Quart](https://github.com/pallets/quart) web framework.
 
 ## Features
 
-- **Automatic Scope Management**: Handles REQUEST and SESSION scopes for HTTP and
+- **Automatic scope management**: Handles REQUEST and SESSION scopes for HTTP and
   WebSocket requests
-- **Dependency Injection**: Injects dependencies into route handlers via:
+- **Dependency injection**: Injects dependencies into route handlers via:
     - Auto-injection mode for all routes
     - `@inject` decorator for manual setup
-- **WebSocket Support**: Full support for WebSocket handlers with proper scoping
-- **Blueprint Support**: Works with Quart blueprints out of the box
+- **WebSocket support**: Full support for WebSocket handlers with proper scoping
+- **Blueprint support**: Works with Quart blueprints out of the box
 
 ## Installation
 
@@ -34,7 +34,7 @@ Or with `uv`:
 uv add quart-dishka
 ```
 
-## Quick Start
+## Quick start
 
 ```python
 from quart import Quart
@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
 ## Usage
 
-### Method 1: Auto-Injection Mode
+### Method 1: Auto-injection mode
 
 Enable automatic dependency injection for all routes:
 
@@ -85,7 +85,7 @@ async def hello(greeting: FromDishka[str]) -> str:
     return f"{greeting}, World!"
 ```
 
-### Method 2: Manual Injection
+### Method 2: Manual injection
 
 Use the `@inject` decorator for specific routes:
 
@@ -104,7 +104,7 @@ async def hello(greeting: FromDishka[str]) -> str:
     return f"{greeting}, World!"
 ```
 
-### WebSocket Support
+### WebSocket support
 
 ```python
 from dishka import FromDishka
@@ -122,7 +122,7 @@ async def websocket(ws: FromDishka[Websocket], greeting: FromDishka[str]):
     await ws.send(f"{greeting} from WebSocket!")
 ```
 
-### Factory Pattern
+### Factory pattern
 
 ```python
 from dishka import make_async_container
@@ -138,7 +138,7 @@ def create_app():
     return app
 ```
 
-### Blueprint Support
+### Blueprint support
 
 ```python
 from dishka import FromDishka
@@ -164,7 +164,7 @@ app.register_blueprint(bp)
 - Quart >= 0.20.0
 - Dishka >= 1.4.0
 
-## More Examples
+## More examples
 
 Check out the [examples](https://github.com/hrimov/quart-dishka/tree/main/examples)
 directory for more detailed examples:
