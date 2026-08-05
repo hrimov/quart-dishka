@@ -4,16 +4,16 @@ from unittest.mock import Mock
 
 from dishka import Provider, Scope, provide
 
-AppDep = NewType("AppDep", str)
-APP_DEP_VALUE = "APP"
+AppDep = NewType('AppDep', str)
+APP_DEP_VALUE = 'APP'
 
-RequestDep = NewType("RequestDep", str)
-REQUEST_DEP_VALUE = "REQUEST"
+RequestDep = NewType('RequestDep', str)
+REQUEST_DEP_VALUE = 'REQUEST'
 
-WebSocketDep = NewType("WebSocketDep", str)
-WS_DEP_VALUE = "WS"
+WebSocketDep = NewType('WebSocketDep', str)
+WS_DEP_VALUE = 'WS'
 
-AppMock = NewType("AppMock", Mock)
+AppMock = NewType('AppMock', Mock)
 
 
 class AppProvider(Provider):

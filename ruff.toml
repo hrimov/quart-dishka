@@ -4,36 +4,68 @@ src = ["src"]
 
 include = ["src/**.py", "tests/**.py", "noxfile.py"]
 
-lint.select = [
-    "ALL"
+[lint]
+select = ["ALL"]
+extend-select = [
+    "B",
+    "I",
+    "UP",
+    "D200",
+    "D201",
+    "D202",
+    "D204",
+    "D209",
+    "D210",
+    "D211",
+    "D213",
+    "D301",
+    "D400",
+    "D403",
+    "D418",
+    "D419",
 ]
-lint.ignore = [
-    "ARG",
+ignore = [
     "ANN",
+    "ARG",
+    "B911",
     "COM812",
     "CPY001",
-    "D",
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D107",
     "EM101",
     "EM102",
+    "ISC003",
+    "PLR0913",
+    "PLW2901",
     "PT001",
     "PT023",
+    "RET505",
+    "SIM103",
     "SIM108",
     "SIM114",
-    "TRY003",
-    "TC003",
-    "PLW2901",
-    "RET505",
-    "PLR0913",
     "TC001",
-    "SIM103",
-    "ISC003",
+    "TC003",
+    "TRY003",
 ]
+
+[lint.pydocstyle]
+convention = "pep257"
 
 [lint.per-file-ignores]
 "tests/**" = ["TID252", "PLR2004", "S101"]
 
-[lint.isort]
-no-lines-before = ["local-folder"]
-
 [lint.flake8-tidy-imports]
 ban-relative-imports = "parents"
+
+[lint.flake8-quotes]
+inline-quotes = "single"
+multiline-quotes = "double"
+docstring-quotes = "double"
+
+[format]
+line-ending = "lf"
+quote-style = "single"

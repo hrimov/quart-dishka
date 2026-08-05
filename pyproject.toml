@@ -20,11 +20,11 @@ dependencies = [
 
 [project.optional-dependencies]
 lint = [
-    "ruff",
-    "mypy",
+    "ruff==0.16.1",
+    "mypy==2.3.0",
 ]
 test = [
-    "nox",
+    "nox==2026.7.11",
 ]
 
 [project.urls]

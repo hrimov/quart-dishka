@@ -7,6 +7,7 @@ from dishka import make_async_container
 from quart import Quart, g
 
 from quart_dishka.extension import QuartDishka, inject
+
 from .mocks import AppProvider
 
 
@@ -23,7 +24,7 @@ def dishka_app_with_lifecycle_hooks(
         for func in before_request:
             app.before_request(func)
 
-    @app.route("/")
+    @app.route('/')
     @inject
     async def route_handler_view():
         return await view()
@@ -35,11 +36,11 @@ def dishka_app_with_lifecycle_hooks(
 
 
 async def static_ok_view() -> str:
-    return "OK"
+    return 'OK'
 
 
 def before_request_interceptor(*args, **kwargs) -> str:
-    return "OK"
+    return 'OK'
 
 
 @pytest.mark.asyncio
@@ -50,11 +51,11 @@ async def test_before_request_adds_container_to_quart_g(
         static_ok_view,
         app_provider,
     ) as app:
-        async with app.test_request_context("/"):
+        async with app.test_request_context('/'):
             client = app.test_client()
-            response = await client.get("/")
+            response = await client.get('/')
             assert response.status_code == 200
-            assert hasattr(g, "dishka_container")
+            assert hasattr(g, 'dishka_container')
 
 
 @pytest.mark.asyncio
@@ -66,8 +67,8 @@ async def test_teardown_skips_container_close_when_not_in_quart_g(
         app_provider,
         before_request=(before_request_interceptor,),
     ) as app:
-        async with app.test_request_context("/"):
+        async with app.test_request_context('/'):
             client = app.test_client()
-            response = await client.get("/")
+            response = await client.get('/')
             assert response.status_code == 200
-            assert not hasattr(g, "dishka_container")
+            assert not hasattr(g, 'dishka_container')

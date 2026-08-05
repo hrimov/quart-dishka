@@ -9,6 +9,7 @@ from quart import Quart, Websocket
 from quart_dishka.container import ContainerMiddleware
 from quart_dishka.extension import _inject_routes, inject
 from quart_dishka.provider import QuartProvider
+
 from .mocks import (
     APP_DEP_VALUE,
     REQUEST_DEP_VALUE,
@@ -24,7 +25,7 @@ from .mocks import (
 @asynccontextmanager
 async def dishka_http_app(handler, provider) -> AsyncGenerator[Quart, None]:
     app = Quart(__name__)
-    app.get("/")(inject(handler))
+    app.get('/')(inject(handler))
     container = make_async_container(provider, QuartProvider())
 
     middleware = ContainerMiddleware(container)
@@ -39,7 +40,7 @@ async def dishka_http_app(handler, provider) -> AsyncGenerator[Quart, None]:
 @asynccontextmanager
 async def dishka_ws_app(handler, provider) -> AsyncGenerator[Quart, None]:
     app = Quart(__name__)
-    app.websocket("/")(inject(handler))
+    app.websocket('/')(inject(handler))
     container = make_async_container(provider, QuartProvider())
 
     middleware = ContainerMiddleware(container)
@@ -63,7 +64,7 @@ async def dishka_auto_app(view, provider):
     for blueprint in app.blueprints.values():
         _inject_routes(blueprint)
 
-    app.route("/")(inject(view))
+    app.route('/')(inject(view))
     yield app
     await container.close()
 
@@ -76,7 +77,7 @@ async def handle_with_app(
 
 
 @pytest.mark.parametrize(
-    "app_factory",
+    'app_factory',
     [
         dishka_http_app,
         dishka_auto_app,
@@ -86,7 +87,7 @@ async def handle_with_app(
 async def test_http_app_dependency(app_provider: AppProvider, app_factory):
     async with app_factory(handle_with_app, app_provider) as app:
         test_client = app.test_client()
-        await test_client.get("/")
+        await test_client.get('/')
         app_provider.mock.assert_called_with(APP_DEP_VALUE)
         app_provider.app_released.assert_not_called()
     app_provider.app_released.assert_called()
@@ -103,7 +104,7 @@ async def handle_with_request(
 async def test_http_request_dependency(app_provider: AppProvider):
     async with dishka_http_app(handle_with_request, app_provider) as app:
         test_client = app.test_client()
-        await test_client.get("/")
+        await test_client.get('/')
         app_provider.mock.assert_called_with(REQUEST_DEP_VALUE)
         app_provider.request_released.assert_called_once()
 
@@ -112,12 +113,12 @@ async def test_http_request_dependency(app_provider: AppProvider):
 async def test_http_request_dependency2(app_provider: AppProvider):
     async with dishka_http_app(handle_with_request, app_provider) as app:
         test_client = app.test_client()
-        await test_client.get("/")
+        await test_client.get('/')
         app_provider.mock.assert_called_with(REQUEST_DEP_VALUE)
         app_provider.request_released.assert_called_once()
         app_provider.mock.reset_mock()
         app_provider.request_released.reset_mock()
-        await test_client.get("/")
+        await test_client.get('/')
         app_provider.mock.assert_called_with(REQUEST_DEP_VALUE)
         app_provider.request_released.assert_called_once()
 
@@ -138,7 +139,7 @@ async def get_with_app(
     await ws.accept()
     await ws.receive()  # consume the message
     mock(app_dep)
-    await ws.send("passed")
+    await ws.send('passed')
 
 
 @pytest.mark.asyncio
@@ -147,10 +148,10 @@ async def test_websocket_app_dependency(
 ) -> None:
     async with (
         dishka_ws_app(get_with_app, ws_app_provider) as app,
-        app.test_client().websocket("/") as test_client,
+        app.test_client().websocket('/') as test_client,
     ):
-        await test_client.send("ping")
-        assert await test_client.receive() == "passed"
+        await test_client.send('ping')
+        assert await test_client.receive() == 'passed'
         ws_app_provider.mock.assert_called_with(APP_DEP_VALUE)
         ws_app_provider.app_released.assert_not_called()
 
@@ -163,7 +164,7 @@ async def get_with_request(
     await ws.accept()
     await ws.receive()
     mock(req_dep)
-    await ws.send("passed")
+    await ws.send('passed')
 
 
 @pytest.mark.asyncio
@@ -171,9 +172,9 @@ async def test_websocket_request_dependency(
     ws_app_provider: WebSocketAppProvider,
 ) -> None:
     async with dishka_ws_app(get_with_request, ws_app_provider) as app:
-        async with app.test_client().websocket("/") as test_client:
-            await test_client.send("ping")
-            assert await test_client.receive() == "passed"
+        async with app.test_client().websocket('/') as test_client:
+            await test_client.send('ping')
+            assert await test_client.receive() == 'passed'
             ws_app_provider.mock.assert_called_with(REQUEST_DEP_VALUE)
         ws_app_provider.request_released.assert_called_once()
 
@@ -183,15 +184,15 @@ async def test_websocket_request_dependency_multiple(
     ws_app_provider: WebSocketAppProvider,
 ) -> None:
     async with dishka_ws_app(get_with_request, ws_app_provider) as app:
-        async with app.test_client().websocket("/") as test_client:
-            await test_client.send("ping")
-            assert await test_client.receive() == "passed"
+        async with app.test_client().websocket('/') as test_client:
+            await test_client.send('ping')
+            assert await test_client.receive() == 'passed'
         ws_app_provider.request_released.assert_called_once()
         ws_app_provider.request_released.reset_mock()
 
-        async with app.test_client().websocket("/") as test_client:
-            await test_client.send("ping")
-            assert await test_client.receive() == "passed"
+        async with app.test_client().websocket('/') as test_client:
+            await test_client.send('ping')
+            assert await test_client.receive() == 'passed'
         ws_app_provider.mock.assert_called_with(REQUEST_DEP_VALUE)
         ws_app_provider.request_released.assert_called_once()
 
@@ -204,7 +205,7 @@ async def get_with_websocket(
     await ws.accept()
     await ws.receive()
     mock(ws_dep)
-    await ws.send("passed")
+    await ws.send('passed')
 
 
 @pytest.mark.asyncio
@@ -212,8 +213,8 @@ async def test_websocket_dependency(
     ws_app_provider: WebSocketAppProvider,
 ) -> None:
     async with dishka_ws_app(get_with_websocket, ws_app_provider) as app:
-        async with app.test_client().websocket("/") as test_client:
-            await test_client.send("ping")
-            assert await test_client.receive() == "passed"
+        async with app.test_client().websocket('/') as test_client:
+            await test_client.send('ping')
+            assert await test_client.receive() == 'passed'
             ws_app_provider.mock.assert_called_with(WS_DEP_VALUE)
         ws_app_provider.websocket_released.assert_called_once()

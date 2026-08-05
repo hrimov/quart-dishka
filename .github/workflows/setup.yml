@@ -26,9 +26,13 @@ jobs:
           uv pip install --system -e ".[lint]"
           uv pip install --system nox
 
-      - name: Run ruff
+      - name: Run linter
         run: |
-          ruff check
+          ruff check --output-format github
+
+      - name: Run formatter
+        run: |
+          ruff format --check
 
       - name: Run mypy
         run: |

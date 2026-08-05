@@ -1,7 +1,7 @@
 __all__ = [
-    "QuartDishka",
-    "QuartProvider",
-    "inject",
+    'QuartDishka',
+    'QuartProvider',
+    'inject',
 ]
 
 from .extension import QuartDishka, inject

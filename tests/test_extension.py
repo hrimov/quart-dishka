@@ -4,6 +4,7 @@ from quart import Blueprint, Quart
 
 from quart_dishka.exceptions import ContainerNotSetError
 from quart_dishka.extension import QuartDishka, inject
+
 from .mocks import APP_DEP_VALUE, AppDep, AppProvider
 
 
@@ -15,7 +16,7 @@ async def test_quart_dishka_init():
 
     assert extension.container == container
     assert extension.auto_inject is False
-    assert "QUART_DISHKA" in app.extensions
+    assert 'QUART_DISHKA' in app.extensions
 
 
 @pytest.mark.asyncio
@@ -25,7 +26,7 @@ async def test_quart_dishka_init_without_container():
 
     with pytest.raises(
         ContainerNotSetError,
-        match="Container must be set before initializing app",
+        match='Container must be set before initializing app',
     ):
         extension.init_app(app)
 
@@ -38,7 +39,7 @@ async def test_factory_pattern():
     app = Quart(__name__)
     extension.init_app(app)
 
-    assert "QUART_DISHKA" in app.extensions
+    assert 'QUART_DISHKA' in app.extensions
 
 
 @pytest.mark.asyncio
@@ -46,11 +47,11 @@ async def test_quart_dishka_auto_inject():
     app = Quart(__name__)
     container = make_async_container(AppProvider())
 
-    @app.route("/")
+    @app.route('/')
     async def index(app_dep: FromDishka[AppDep]) -> str:
         return str(app_dep)
 
-    @app.route("/explicit")
+    @app.route('/explicit')
     @inject
     async def explicit(app_dep: FromDishka[AppDep]) -> str:
         return str(app_dep)
@@ -59,11 +60,11 @@ async def test_quart_dishka_auto_inject():
 
     client = app.test_client()
 
-    response = await client.get("/")
+    response = await client.get('/')
     assert response.status_code == 200
     assert await response.get_data(as_text=True) == str(APP_DEP_VALUE)
 
-    response = await client.get("/explicit")
+    response = await client.get('/explicit')
     assert response.status_code == 200
     assert await response.get_data(as_text=True) == str(APP_DEP_VALUE)
 
@@ -71,14 +72,14 @@ async def test_quart_dishka_auto_inject():
 @pytest.mark.asyncio
 async def test_quart_dishka_blueprint_auto_inject():
     app = Quart(__name__)
-    bp = Blueprint("test", __name__)
+    bp = Blueprint('test', __name__)
     container = make_async_container(AppProvider())
 
-    @bp.route("/bp")
+    @bp.route('/bp')
     async def bp_route(app_dep: FromDishka[AppDep]) -> str:
         return str(app_dep)
 
-    @bp.route("/bp-explicit")
+    @bp.route('/bp-explicit')
     @inject
     async def bp_explicit(app_dep: FromDishka[AppDep]) -> str:
         return str(app_dep)
@@ -88,10 +89,10 @@ async def test_quart_dishka_blueprint_auto_inject():
 
     client = app.test_client()
 
-    response = await client.get("/bp")
+    response = await client.get('/bp')
     assert response.status_code == 200
     assert await response.get_data(as_text=True) == str(APP_DEP_VALUE)
 
-    response = await client.get("/bp-explicit")
+    response = await client.get('/bp-explicit')
     assert response.status_code == 200
     assert await response.get_data(as_text=True) == str(APP_DEP_VALUE)

@@ -1,5 +1,5 @@
 __all__ = [
-    "QuartProvider",
+    'QuartProvider',
 ]
 
 from dishka import Provider, Scope, from_context

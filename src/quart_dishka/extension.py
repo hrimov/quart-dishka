@@ -1,6 +1,6 @@
 __all__ = [
-    "QuartDishka",
-    "inject",
+    'QuartDishka',
+    'inject',
 ]
 import functools
 import inspect
@@ -20,8 +20,8 @@ try:
 except ImportError:
     from typing_extensions import ParamSpec  # type: ignore[assignment]
 
-P = ParamSpec("P")
-T = TypeVar("T")
+P = ParamSpec('P')
+T = TypeVar('T')
 # Note: in Flaks there was a general parent class for app & blueprint,
 #       but in Quart there is no such thing, so for typecheker we make an alias
 Scaffold: TypeAlias = Blueprint | Quart
@@ -57,7 +57,8 @@ def inject(func: Callable[P, T]) -> Callable[P, T]:
 
 
 class QuartDishka:
-    """Quart extension for Dishka dependency injection.
+    """
+    Quart extension for Dishka dependency injection.
 
     Example:
         >>> from dishka.async_container import make_async_container
@@ -100,4 +101,4 @@ class QuartDishka:
                 #       https://github.com/pallets/quart/issues/404
                 _inject_routes(blueprint)  # type: ignore[arg-type]
 
-        app.extensions["QUART_DISHKA"] = self
+        app.extensions['QUART_DISHKA'] = self
