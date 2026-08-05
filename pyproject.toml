@@ -1,6 +1,6 @@
 [project]
 name = "quart-dishka"
-version = "1.0.0"
+dynamic = ["version"]
 description = "Quart integration for dishka"
 requires-python = ">=3.10"
 readme = "README.md"
@@ -10,7 +10,11 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
     "Typing :: Typed",
+    "Operating System :: OS Independent",
 ]
 dependencies = [
     "dishka>=1.4.0",
@@ -34,7 +38,10 @@ test = [
 "Bug Tracker" = "https://github.com/hrimov/quart-dishka/issues"
 
 [build-system]
-requires = ["setuptools>=66.0"]
+requires = [
+    "setuptools==83.0.0",
+    "setuptools-scm[simple]==10.2.1",
+]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
@@ -42,3 +49,5 @@ include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools_scm]
