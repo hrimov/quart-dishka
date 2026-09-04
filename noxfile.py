@@ -20,6 +20,13 @@ PYTHON_LEAST_STABLE_VERSION = '3.13'
 PYTHON_MIN_VERSION = PYTHON_VERSIONS[0]
 PYTHON_MAX_VERSION = PYTHON_VERSIONS[-1]
 QUART_MIN_VERSION = '0.20.0'
+QUART_VERSIONS = [
+    '0.20.*',
+    '0.21.*',
+    '0.22.*',
+    '0.23.*',
+    'latest',
+]
 DISHKA_VERSIONS = [
     '1.4.*',
     '1.5.*',
@@ -57,22 +64,32 @@ def run(
 
 
 @nox.session(
-    python=PYTHON_VERSIONS,
-    venv_backend='uv',
-    reuse_venv=True,
-    tags=['ci', 'python'],
-)
-def python_matrix(session: nox.Session) -> None:
-    run(session, quart='latest', dishka='latest')
-
-
-@nox.session(
     python=PYTHON_MAX_VERSION,
     venv_backend='uv',
     reuse_venv=True,
     tags=['latest'],
 )
 def latest_compatibility(session: nox.Session) -> None:
+    run(session, quart='latest', dishka='latest')
+
+
+@nox.session(
+    python=PYTHON_MIN_VERSION,
+    venv_backend='uv',
+    reuse_venv=True,
+    tags=['ci'],
+)
+def floor(session: nox.Session) -> None:
+    run(session, quart=QUART_MIN_VERSION, dishka='1.4.*')
+
+
+@nox.session(
+    python=PYTHON_VERSIONS,
+    venv_backend='uv',
+    reuse_venv=True,
+    tags=['ci', 'python'],
+)
+def python_matrix(session: nox.Session) -> None:
     run(session, quart='latest', dishka='latest')
 
 
@@ -88,10 +105,11 @@ def dishka_matrix(session: nox.Session, dishka: str) -> None:
 
 
 @nox.session(
-    python=PYTHON_MIN_VERSION,
+    python=PYTHON_LEAST_STABLE_VERSION,
     venv_backend='uv',
     reuse_venv=True,
-    tags=['ci'],
+    tags=['ci', 'quart'],
 )
-def floor(session: nox.Session) -> None:
-    run(session, quart=QUART_MIN_VERSION, dishka='1.4.*')
+@nox.parametrize('quart', QUART_VERSIONS)
+def quart_matrix(session: nox.Session, quart: str) -> None:
+    run(session, quart=quart, dishka='latest')
